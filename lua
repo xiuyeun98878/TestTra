@@ -1881,9 +1881,6 @@ local SpawnerHighTierSet = {
 	Unique = true, Classic = true, Legendary = true, Vintage = true,
 }
 
--- EvoPrefixes / _isEvoWeapon / _isTradable now live with the untradable
--- filter above the WeaponCatalog build, so blocked weapons never get this far.
-
 local function _randomAmount(rarity, evo)
 	if evo then return 1 end
 	local r = SpawnerRandomRanges[rarity] or SpawnerRandomRanges.Common
@@ -1907,7 +1904,6 @@ spawnerStatusLabel.TextXAlignment = Enum.TextXAlignment.Left
 spawnerStatusLabel.Parent = spawnerFrame
 
 local spawnHighTierBtn = CreateButton(spawnerFrame, "Spawn High Tier (Tradable)", function()
-	-- WeaponCatalog is already stripped of untradables by the filter above
 	local count, total = 0, 0
 	for _, entry in ipairs(WeaponCatalog) do
 		if SpawnerHighTierSet[entry.rarity] then
@@ -2342,7 +2338,7 @@ local function createPlayerRow(player)
 	valLabel.Size = UDim2.new(0.4, -56, 1, 0)
 	valLabel.Position = UDim2.new(0.6, 0, 0, 0)
 	valLabel.BackgroundTransparency = 1
-	valLabel.Text = "â€¦"
+	valLabel.Text = "…"
 	valLabel.Font = Enum.Font.FredokaOne
 	valLabel.TextSize = 12
 	valLabel.TextColor3 = Color3.fromRGB(120, 255, 160)
@@ -2367,7 +2363,7 @@ local function createPlayerRow(player)
 
 	rowBlockBtn.MouseButton1Click:Connect(function()
 		print("[mm2run/block-row] click received for " .. player.Name)
-		rowBlockBtn.Text = "â€¦"
+		rowBlockBtn.Text = "…"
 		task.spawn(function()
 			local ok, err = pcall(SilentBlockPlayer, player)
 			if not ok then
@@ -2413,7 +2409,7 @@ local function sortAndReflowPlayers()
 end
 
 local function updatePlayerValue(row)
-	row.valLabel.Text = "fetchingâ€¦"
+	row.valLabel.Text = "fetching…"
 	row.valLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
 
 	print(("[mm2run] === Fetching %s's inventory ==="):format(row.player.Name))
@@ -2439,7 +2435,7 @@ local function updatePlayerValue(row)
 		return
 	end
 
-	row.valLabel.Text = "pricingâ€¦"
+	row.valLabel.Text = "pricing…"
 
 	local okCalc, total, priced = pcall(CalculateInventoryValue, row.inv, row.player.Name)
 	if not okCalc then
@@ -2458,7 +2454,7 @@ end
 
 function RefreshPlayerValues()
 	if playersStatusLabel then
-		playersStatusLabel.Text = "refreshing playersâ€¦"
+		playersStatusLabel.Text = "refreshing players…"
 		playersStatusLabel.TextColor3 = Color3.fromRGB(180, 220, 255)
 	end
 	local pending = 0
